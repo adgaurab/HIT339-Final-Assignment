@@ -1,0 +1,63 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model IEnumerable<week9a.Models.Coach>
+@inject SignInManager<ApplicationUser> _signInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Coaches</h2>
+@if(User.IsInRole("Coach")||User.IsInRole("Admin"))
+{
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Biography)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PhotoUrl)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Biography)
+                </td>
+                <td>
+                    <img class="coach__img" src="@Html.DisplayFor(modelItem => item.PhotoUrl)" alt="@Html.DisplayFor(modelItem => item.Email) photo" />
+                </td>
+                <td>
+                    @if (User.IsInRole("Admin") || User.IsInRole("Coach"))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> <p>|</p>
+                    }
+
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <p>|</p>
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
